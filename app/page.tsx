@@ -75,7 +75,7 @@ const Home = () => {
       <Text>Result:</Text>
       <SimpleGrid columns={{ sm: 2, md: 3, lg: 4, xl: 5 }} gap={3}>
         {data.map((book) => (
-          <Box key={uniqid()} padding="6" boxShadow="lg" bg="white">
+          <Box key={uniqid()} padding="6" boxShadow="lg">
             <Image src={book.image} alt={book.title} />
             <Text>{book.title}</Text>
             <Text>{book.subtitle}</Text>
@@ -84,7 +84,7 @@ const Home = () => {
             ))}
           </Box>
         ))}
-        <Box padding="6" boxShadow="lg" bg="white">
+        <Box padding="6" boxShadow="lg">
           <SkeletonCircle size="10" />
           <SkeletonText mt="4" noOfLines={4} spacing="4" />
         </Box>

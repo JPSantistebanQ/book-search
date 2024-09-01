@@ -31,15 +31,13 @@ const sizes = {
 
 const config: ThemeConfig = {
   initialColorMode: 'system',
-  useSystemColorMode: true
+  useSystemColorMode: false
 }
 
 export const theme = extendTheme({
   config,
-  ...{
-    fonts: {
-      heading: 'var(--font-rubik)',
-      body: 'var(--font-rubik)'
-    }
+  fonts: {
+    heading: 'var(--font-rubik)',
+    body: 'var(--font-rubik)'
   }
 })
