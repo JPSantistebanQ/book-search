@@ -50,7 +50,7 @@ const Home = () => {
   }
 
   return (
-    <Container maxW="full">
+    <Container maxW="container.xl">
       <Flex flexDirection="column">
         <Heading as="h1">Book search</Heading>
         <form onSubmit={(e) => handleSubmit(e)}>
@@ -73,7 +73,7 @@ const Home = () => {
       {isLoading ? <Spinner /> : null}
 
       <Text>Result:</Text>
-      <SimpleGrid columns={3} gap={3}>
+      <SimpleGrid columns={{ sm: 2, md: 3, lg: 4, xl: 5 }} gap={3}>
         {data.map((book) => (
           <Box key={uniqid()} padding="6" boxShadow="lg" bg="white">
             <Image src={book.image} alt={book.title} />
