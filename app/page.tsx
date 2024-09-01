@@ -1,95 +1,96 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
 
-export default function Home() {
+import { FormEvent, useState } from 'react'
+import { FaSearch } from 'react-icons/fa'
+import uniqid from 'uniqid'
+
+import { searchVolumes } from '@/app/lib/api'
+import { Book } from '@/app/lib/definitions'
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
+  Flex,
+  Heading,
+  HStack,
+  Image,
+  Input,
+  SimpleGrid,
+  SkeletonCircle,
+  SkeletonText,
+  Spinner,
+  Text
+} from '@chakra-ui/react'
+
+const Home = () => {
+  const [data, setData] = useState<Book[]>([])
+  const [isLoading, setLoading] = useState(false)
+  const [input, setInput] = useState('')
+
+  const searchBooks = async () => {
+    setLoading(true)
+    await searchVolumes(input)
+      .then((response) => {
+        console.log('data: ', response)
+        setData(response)
+      })
+      .catch((error) => {
+        console.error('Error retrieving data:', error)
+        throw new Error('Could not get data')
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }
+
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault()
+    await searchBooks()
+  }
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
+    <Container maxW="full">
+      <Flex flexDirection="column">
+        <Heading as="h1">Book search</Heading>
+        <form onSubmit={(e) => handleSubmit(e)}>
+          <HStack my={2}>
+            <Input
+              placeholder="Basic usage"
+              type="text"
+              value={input}
+              onInput={(e) => setInput(e.currentTarget.value)}
             />
-          </a>
-        </div>
-      </div>
+            <Button rightIcon={<FaSearch />} variant="solid" type="submit">
+              Buscar
+            </Button>
+          </HStack>
+        </form>
+      </Flex>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+      <Divider />
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+      {isLoading ? <Spinner /> : null}
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+      <Text>Result:</Text>
+      <SimpleGrid columns={3} gap={3}>
+        {data.map((book) => (
+          <Box key={uniqid()} padding="6" boxShadow="lg" bg="white">
+            <Image src={book.image} alt={book.title} />
+            <Text>{book.title}</Text>
+            <Text>{book.subtitle}</Text>
+            {book.authors.map((author) => (
+              <Text key={uniqid()}>{author}</Text>
+            ))}
+          </Box>
+        ))}
+        <Box padding="6" boxShadow="lg" bg="white">
+          <SkeletonCircle size="10" />
+          <SkeletonText mt="4" noOfLines={4} spacing="4" />
+        </Box>
+      </SimpleGrid>
+    </Container>
+  )
 }
+
+export default Home
