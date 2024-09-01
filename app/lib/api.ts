@@ -11,7 +11,7 @@ const axiosInstance = axios.create({
     AccessControlAllowOrigin: '*',
     AccessControlAllowMethods: 'GET, POST, PUT, DELETE, OPTIONS',
     AccessControlAllowHeaders:
-      'Content-Type, Authorization, Content-Length, X-Requested-With'
+      'Content-Type, Authorization, Content-Length, X-Requested-With, Accept, Origin'
     // Add all custom headers here
   }
 })
