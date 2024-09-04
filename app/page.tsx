@@ -2,24 +2,18 @@
 
 import { FormEvent, useState } from 'react'
 import { FaSearch } from 'react-icons/fa'
-import uniqid from 'uniqid'
 
 import { searchVolumes } from '@/app/lib/api'
 import { Book } from '@/app/lib/definitions'
+import ResultList from '@/app/ui/components/ResultList/ResultList'
+import ResultLoading from '@/app/ui/components/ResultLoading/ResultLoading'
 import {
-  Box,
   Button,
   Container,
-  Divider,
   Flex,
   Heading,
   HStack,
-  Image,
   Input,
-  SimpleGrid,
-  SkeletonCircle,
-  SkeletonText,
-  Spinner,
   Text
 } from '@chakra-ui/react'
 
@@ -30,6 +24,7 @@ const Home = () => {
 
   const searchBooks = async () => {
     setLoading(true)
+    if (!input) setLoading(false)
     await searchVolumes(input)
       .then((response) => {
         console.log('data: ', response)
@@ -52,43 +47,40 @@ const Home = () => {
   return (
     <Container maxW="container.xl">
       <Flex flexDirection="column">
-        <Heading as="h1">Book search</Heading>
+        <Heading mt={40} mb={8} as="h1" textAlign="center">
+          Book Scout
+        </Heading>
         <form onSubmit={(e) => handleSubmit(e)}>
-          <HStack my={2}>
+          <HStack my={10}>
             <Input
-              placeholder="Basic usage"
+              disabled={isLoading}
+              placeholder="Ingrese título, autor, ISBN"
               type="text"
               value={input}
               onInput={(e) => setInput(e.currentTarget.value)}
             />
-            <Button rightIcon={<FaSearch />} variant="solid" type="submit">
+            <Button
+              rightIcon={<FaSearch />}
+              variant="solid"
+              type="submit"
+              disabled={isLoading}
+            >
               Buscar
             </Button>
           </HStack>
         </form>
       </Flex>
 
-      <Divider />
+      {isLoading ? <ResultLoading /> : null}
 
-      {isLoading ? <Spinner /> : null}
-
-      <Text>Result:</Text>
-      <SimpleGrid columns={{ sm: 2, md: 3, lg: 4, xl: 5 }} gap={3}>
-        {data.map((book) => (
-          <Box key={uniqid()} padding="6" boxShadow="lg">
-            <Image src={book.image} alt={book.title} />
-            <Text>{book.title}</Text>
-            <Text>{book.subtitle}</Text>
-            {book.authors.map((author) => (
-              <Text key={uniqid()}>{author}</Text>
-            ))}
-          </Box>
-        ))}
-        <Box padding="6" boxShadow="lg">
-          <SkeletonCircle size="10" />
-          <SkeletonText mt="4" noOfLines={4} spacing="4" />
-        </Box>
-      </SimpleGrid>
+      {!isLoading && data.length > 0 ? (
+        <>
+          <Text fontSize="xl" fontWeight="bold" mb={2}>
+            Resultado:
+          </Text>
+          <ResultList data={data} />
+        </>
+      ) : null}
     </Container>
   )
 }

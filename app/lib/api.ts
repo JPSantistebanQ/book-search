@@ -16,10 +16,12 @@ const searchVolumes = async (search: string): Promise<Book[]> => {
 
     return (response.data.items as any[]).map((item) => {
       return Builder(Book)
+        .id(item.id)
         .title(item.volumeInfo?.title)
         .subtitle(item.volumeInfo?.subtitle)
         .image(item.volumeInfo.imageLinks?.thumbnail)
         .authors(item.volumeInfo?.authors ?? [])
+        .previewLink(item.volumeInfo?.previewLink ?? null)
         .build()
     })
   } catch (error) {
