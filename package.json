@@ -1,6 +1,6 @@
 {
   "name": "book-search",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "predeploy": "npm run build-gh-pages",
-    "deploy": "gh-pages -d build --remote gh-pages --branch main"
+    "deploy": "git push gh-pages main"
   },
   "dependencies": {
     "@chakra-ui/next-js": "^2.2.0",
