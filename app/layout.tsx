@@ -18,7 +18,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={fonts.inter.className}>
+      <body
+        className={[fonts.inter.className, fonts.pacifico.variable].join(' ')}
+      >
         <Providers>{children}</Providers>
       </body>
     </html>

@@ -37,7 +37,7 @@ const config: ThemeConfig = {
 export const theme = extendTheme({
   config,
   fonts: {
-    heading: 'var(--font-rubik)',
+    heading: 'var(--font-pacifico)',
     body: 'var(--font-rubik)'
   }
 })

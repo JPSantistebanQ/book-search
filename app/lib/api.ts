@@ -8,10 +8,25 @@ const axiosInstance = axios.create({
   timeout: 5000 // Timeout if necessary
 })
 
-const searchVolumes = async (search: string): Promise<Book[]> => {
+const authors: string[] = [
+  'J.K. Rowling',
+  'George R.R. Martin',
+  'J.R.R. Tolkien',
+  'Agatha Christie',
+  'Issac Asimov',
+  'Mario Vargas Llosa',
+  'Gabriel García Márquez',
+  'George Orwell'
+]
+
+const searchVolumes = async (
+  search: string,
+  startIndex: number = 0,
+  maxResults: number = 40
+): Promise<Book[]> => {
   try {
     const response = await axiosInstance.get(
-      `/volumes?q=${search}&key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}&startIndex=0&maxResults=40`
+      `/volumes?q=${search}&key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}&startIndex=${startIndex}&maxResults=${maxResults}`
     )
 
     return (response.data.items as any[]).map((item) => {
@@ -30,4 +45,9 @@ const searchVolumes = async (search: string): Promise<Book[]> => {
   }
 }
 
-export { axiosInstance, searchVolumes }
+const searchMostPopular = async (): Promise<Book[]> => {
+  const randomAuthor = authors[Math.floor(Math.random() * authors.length)]
+  return searchVolumes(`inauthor:${randomAuthor}`, 0, 10)
+}
+
+export { axiosInstance, searchMostPopular, searchVolumes }
